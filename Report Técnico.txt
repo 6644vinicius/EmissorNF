@@ -1,0 +1,23 @@
+Objetivo:
+
+	.O objetivo desse sistema é gerar uma nota fiscal de venda de produtos, baseado nas informações inseridas, como “Cliente”, “Estado Origem”, “Estado Destino” e os detalhes dos “Itens dos Pedidos”. Existem regras para definição do CFOP do produto, bem como a forma de calcular seus impostos.
+
+Implementações:
+
+	.Requisito 1 – Para gerar o XML baseado no objeto C# NotaFiscal, foi feita uma serialização do objeto já preenchido com os devidos dados. Foi criada também uma tabela na base de dados chamada de “ConfigParametros”, nessa tabela é possível incluir parâmetros de configuração como por exemplo o caminho do diretório onde serão armazenadas as Notas Fiscais geradas (XML). Para que o “Id” de cada item da nota fiscal que podemos visualizar a partir do arquivo XML gerado seja corresponda ao mesmo “Id” do item na tabela NotaFiscalItem, o parâmetro “Id” da procedure “P_NOTA_FISCAL_ITEM” foi modificado para “OUTPUT”.
+	
+	.Requisito 2 – Foi criada uma classe de conexão com o Banco de Dados SQL Server para realizar a persistência dos dados referente às Notas Fiscais.
+	
+	.Requisito 3 – Foi estendida a classe “Nota Fiscal Item” e a tabela “NotaFiscalItem” na base de dados para contemplar a utilização dos novos campos relacionados aos impostos de cada item da nota, conforme especificado. O processamento dos dados para inclusão nos campos novos está sendo feito no método “DefinirBaseIPI” dentro da classe “NotaFiscalService”. O objeto “Nota Fiscal Item” foi estendido para que no processo de serialização do objeto, os novos campos sejam refletidos no XML gerado.
+	
+	.Requisito 4 – Foi construída a Stored Procedure nomeada como “P_BUSCA_IMPOSTOS” que possui o número da nota fiscal como parâmetro de entrada e seu retorno está agrupado por CFOP, sendo os demais campos somados.
+	
+	.Requisito 5 – Havia um bug no processo em que o “Estado Destino” e “Estado Origem” estavam definidos de forma invertida ao ser atribuído ao pedido, portanto a regra de definição de CFOP não estava sendo executava corretamente.
+	
+	.Requisito 6 – Foi realizado uma tratativa nos inputs da tela para validar campos em branco, estados brasileiros permitidos e valores informados nos itens do pedido, além de realizar uma limpeza da tela após a ação de “Gerar Nota Fiscal”, bem como os respectivos objetos e classes utilizadas no processamento.
+	
+	.Requisito 7 – Foi estendida a classe “Nota Fiscal Item” e a tabela “NotaFiscalitem” na base de dados para contemplar a utilização do novo campo relacionado ao campo “Desconto”. O Processamento desse desconto está no método “ProcessarDesconto”, que é chamado no método “ProcessarItemPedido” dentro da classe “NotaFiscalService”. O objeto “Nota Fiscal Item” foi estendido para que no processo de serialização do objeto, o novo campo seja refletido no XML gerado.
+	
+	.Requisito 8 – Partindo das premissas de um “Código Limpo”, o mesmo foi refatorado, foram criados alguns métodos para evitar duplicidade de código, aplicar o reuso de métodos e deixar o mesmo mais organizado. 
+	
+	.Requisito 9 – Foi realizado uma bateria de testes, gerando diversas notas fiscais com diversos valores e cenários diferentes para validar o maior número de pontos da aplicação.
